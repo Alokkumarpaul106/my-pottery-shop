@@ -1,0 +1,355 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Home - Poterry-Shop{% endblock %}
+{% block content %}
+
+
+<link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Tiro+Bangla&display=swap" rel="stylesheet">
+<!-- Tiro Bangla Font -->
+
+<section class="font-['Tiro_Bangla'] relative h-[70vh] md:h-[90vh] overflow-hidden mb-10 mt-3.5 md:mt-0">
+
+  <!-- Overlay -->
+  <div class="absolute inset-0 bg-black/40 z-10"></div>
+
+  <!-- Background Image -->
+  <img src="{% static 'backend/banner6.png' %}"
+    class="banner-slide absolute left-0 w-full h-full object-cover-fit opacity-100 transition-opacity duration-700" />
+
+  <img src="{% static 'backend/banner1.webp' %}"
+    class="banner-slide absolute left-0 w-full h-full object-cover-fit  opacity-0 transition-opacity duration-700" />
+
+  <img src="{% static 'backend/banner1.jpg' %}"
+    class="banner-slide absolute left-0 w-full h-full object-cover-fit opacity-0 transition-opacity duration-700" />
+
+
+  <!-- Left -->
+  <button class="prev-btn hidden md:block absolute left-3 top-1/2 -translate-y-1/2 z-30 bg-gray-500 p-2 rounded-full">
+    <i class='bx bx-chevron-left text-3xl'></i>
+  </button>
+
+  <!-- Right -->
+  <button class="next-btn hidden md:block absolute right-3 top-1/2 -translate-y-1/2 z-30 bg-gray-500 p-2 rounded-full">
+    <i class='bx bx-chevron-right text-3xl'></i>
+  </button>
+
+  <!-- Dots -->
+  <div class="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-2 z-30">
+    <span class="dot w-4 h-4 bg-gray-400 rounded-full border border-white cursor-pointer shadow "></span>
+    <span class="dot w-4 h-4 bg-gray-400 rounded-full border border-white cursor-pointer shadow "></span>
+    <span class="dot w-4 h-4 bg-gray-400 rounded-full border border-white cursor-pointer shadow "></span>
+  </div>
+
+  <!-- Content -->
+  <div class="relative z-20 flex flex-col items-center justify-center h-full text-center px-4 md:px-6">
+
+    <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 md:mb-6 text-white leading-tight">
+
+      আমাদের কা<span class="text-red-400">রুপণ্যের ভুবনে</span>
+      <span class="text-blue-400 block mt-2">
+        আপনাকে স্বাগতম !
+      </span>
+
+    </h1>
+
+    <p class="text-sm sm:text-base md:text-lg mb-5 md:mb-6 text-gray-100 max-w-lg leading-relaxed">
+      সেরা দামে চমৎকার সব পণ্য খুঁজে নিন !অবিশ্বাস্য মূল্য ও গুণগত মানের নিশ্চয়তা !আজই অর্ডার করুন এবং দ্রুত ডেলিভারি উপভোগ করুন !
+    </p>
+
+    <!-- Button -->
+    <div class="flex flex-row sm:flex-row gap-3 sm:gap-4 justify-center">
+
+      <a href="{% url 'backend:product_list' %}"
+        class="bg-white text-blue-600 px-5 py-2.5 md:px-6 md:py-3 rounded-lg font-semibold shadow hover:bg-gray-100 transition">
+
+        এখনই কিনুন
+
+      </a>
+
+      <a href="{% url 'backend:product_list' %}"
+        class="border border-white px-5 py-2.5 md:px-6 md:py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition text-white">
+
+        পণ্যগুলো দেখুন
+
+      </a>
+
+    </div>
+  </div>
+
+</section>
+
+
+<!-- category section -->
+
+<section class="font-['Tiro_Bangla'] py-4 md:p-3"> 
+  <div class="max-w-7xl mx-auto px-5 ">
+    <h2 class="text-3xl md:text-3xl font-bold text-center mb-8">Shop by Category</h2>
+
+    <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      {% for category in categories %}
+
+      <a href="{% url 'backend:category_products' category.slug %}" class="group">
+        <div class="bg-white rounded-xl mt-2 shadow-md overflow-hidden hover:shadow-xl transition duration-300">
+          <!-- Category Image -->
+          <div class="w-full h-40 md:h-64 lg:h-72 overflow-hidden">
+            <img src="{{ category.image.url }}"
+              class="w-full h-full object-cover-fit group-hover:scale-110 transition duration-300" />
+          </div>
+
+          <!-- Category Content -->
+          <div class="p-5 text-center">
+            <h3 class="text-xl font-semibold text-gray-800">
+              {{ category.category_name }}
+            </h3>
+
+            <p class="text-gray-500 text-sm mt-2">
+              {{ category.description|truncatewords:11 }}
+            </p>
+
+
+          </div>
+        </div>
+      </a>
+
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+
+
+
+<!-- Product Section -->
+<section class="font-['Tiro_Bangla'] py-10 bg-gray-50">
+  <div class="max-w-7xl mx-auto px-5 md:px-8 ">
+
+    <h2 class="text-3xl font-bold mb-4 text-center text-gray-800">Latest Products</h2>
+    <p class="text-gray-500 text-center text-sm md:text-lg mb-6">আমাদের সর্বশেষ এবং সেরা পণ্যগুলো দেখুন</p>
+
+    <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+
+      {% for product in products %}
+      <!-- Product Card -->
+
+      <div class="bg-white rounded-xl  shadow-md hover:shadow-2xl transition duration-300 ">
+
+        <!-- Product Image -->
+
+        <div class="w-full h-32 md:h-64 lg:h-64 overflow-hidden relative rounded-t-xl">
+          {% if product.stock > 0 %}
+          <a href="{% url 'backend:product_detail' product.slug %}">
+            <img src="{{ product.main_image.url }}" class="w-full h-full object-cover-fit transition duration-300 ">
+          </a>
+          {% else %}
+          <img src="{{ product.main_image.url }}" class="w-full h-full object-cover-fit transition duration-300 ">
+          {% endif %}
+
+          <!-- Stock Badge -->
+          <span
+            class="absolute top-2 left-2 px-2 py-1 bg-red-600 text-xs font-medium shadow text-white rounded-full shadow-md">New</span>
+          <span class="absolute top-2 right-2 text-xs px-2 py-1">
+            {% if product.stock > 0 %}
+
+            <span class="text-white bg-green-700 text-xs font-medium shadow px-2 py-1 rounded-full"> In Stock </span>
+
+            {% else %}
+
+            <span class="text-white bg-red-700 text-sm font-medium px-2 py-1 rounded-full"> Out of Stock </span>
+
+            {% endif %}
+          </span>
+        </div>
+
+        <!-- Product Content -->
+        <div class="p-2">
+
+          <h3 class="text-lg font-semibold text-gray-800 line-clamp-1">
+            {{ product.product_name }}
+          </h3>
+
+          <p class="text-gray-600 text-sm mt-1">
+            {{ product.category.category_name }}
+          </p>
+          <div class="flex items-center gap-2 flex-wrap">
+            <p class="text-gray-800 font-bold text-2xl mt-1">৳ {{ product.price }}</p>
+            <p class="text-gray-500 font-semibold mt-1">
+              {% if product.old_price %}
+              <span class="text-gray-500 line-through ">৳ {{ product.old_price }}</span>
+              {% endif %}
+            </p>
+          </div>
+          <!-- Buttons -->
+          {% if product.stock > 0 %}
+          <div class="flex flex-col gap-2 mt-3">
+
+            <a href="{% url 'backend:product_detail' product.slug %}"
+              class="flex-1 text-center text-sm py-1 rounded-md bg-blue-600 text-white hover:bg-blue-700 shadow-md">
+              View Details
+            </a>
+
+            <form method="POST" action="{% url 'backend:cart_add' product.id %}" class="flex-1">
+              {% csrf_token %}
+              <button class="w-full text-sm py-1 rounded-md bg-blue-600 text-white hover:bg-blue-700 shadow-md">
+                <i class="bx bx-cart"></i> Add to Cart
+              </button>
+            </form>
+
+          </div>
+          {% else %}
+          <button class="w-full text-sm py-4 mt-4 rounded-md bg-gray-200 text-red-500 shadow-md">
+            <i class="bx bx-cart"></i> Out Of Stock
+          </button>
+          {% endif %}
+
+        </div>
+
+      </div>
+      {% endfor %}
+
+    </div>
+
+  </div>
+  <div class="text-center pt-8">
+    <a href="{% url 'backend:product_list' %}"
+      class="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold shadow-md hover:bg-blue-700 transition">
+      View All Products
+    </a>
+  </div>
+</section>
+
+
+
+<!-- Features Section -->
+<section class="font-['Tiro_Bangla'] py-10 md:p-3">
+
+  <div class="max-w-7xl mx-auto px-4">
+
+    <!-- Heading -->
+    <div class="text-center mb-10">
+      <h2 class="text-3xl font-bold mb-4 text-center text-gray-800">
+        Our Services
+      </h2>
+      <p class="text-gray-500 text-sm md:text-lg mb-6">
+        কেন আমাদের নির্বাচন করবেন? আমাদের সেবাগুলোর মাধ্যমে আপনার কেনাকাটার অভিজ্ঞতা আরও উন্নত করুন
+      </p>
+    </div>
+
+
+    <!-- Feature Cards -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 text-center my-4">
+
+      <!-- Card 1 -->
+      <div class="p-5 bg-white text-gray-900 border rounded-2xl shadow-md hover:shadow-xl transition duration-300">
+        <div class="text-4xl mb-3">🚚</div>
+        <h4 class="font-semibold text-[#C66A3D]">বিনামূল্যে শিপিং</h4>
+        <p class="text-gray-500 text-sm mt-1">
+         ৳৬৫০০ বা তার বেশি অর্ডারে উপভোগ করুন সারাদেশে সম্পূর্ণ বিনামূল্যে শিপিং সুবিধা ✨
+        </p>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="p-5 bg-white text-gray-900 border rounded-2xl shadow-md hover:shadow-xl transition duration-300">
+        <div class="text-4xl mb-3">💰</div>
+        <h4 class="font-semibold text-[#C66A3D]">টাকা ফেরত</h4>
+        <p class="text-gray-500 text-sm mt-1">
+           নিশ্চিন্তে কেনাকাটা করুন — ৩০ দিনের মধ্যে টাকা ফেরত গ্যারান্টি সুবিধা রয়েছে 💸
+        </p>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="p-5 bg-white text-gray-900 border rounded-2xl shadow-md hover:shadow-xl transition duration-300">
+        <div class="text-4xl mb-3">🔒</div>
+        <h4 class="font-semibold text-[#C66A3D]">নিরাপদ পেমেন্ট</h4>
+        <p class="text-gray-500 text-sm mt-1">
+         আপনার প্রতিটি লেনদেনের জন্য রয়েছে সম্পূর্ণ 100% নিরাপদ ও বিশ্বস্ত ক্যাশ অন ডেলিভারি সুবিধা 🔒
+        </p>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="p-5 bg-white text-gray-900 border rounded-2xl shadow-md hover:shadow-xl transition duration-300">
+        <div class="text-4xl mb-3">🎧</div>
+        <h4 class="font-semibold text-[#C66A3D]">২৪/৭ সহায়তা</h4>
+        <p class="text-gray-500 text-sm mt-1">
+          যেকোনো প্রয়োজনে আমাদের ২৪/৭ কাস্টমার সাপোর্ট টিম সবসময় আপনার পাশে রয়েছে 💬
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+
+<script>
+
+  let index = 0;
+  let slides;
+  let dots;
+  let timer;
+
+  function init() {
+
+    slides = document.querySelectorAll(".banner-slide");
+    dots = document.querySelectorAll(".dot");
+
+    show(0);
+
+    // AUTO
+    timer = setInterval(() => show(index + 1), 4000);
+
+    // BUTTONS
+    document.querySelector(".next-btn").onclick = () => {
+      show(index + 1);
+      reset();
+    }
+
+    document.querySelector(".prev-btn").onclick = () => {
+      show(index - 1);
+      reset();
+    }
+
+    // DOTS
+    dots.forEach((dot, i) => {
+      dot.onclick = () => {
+        show(i);
+        reset();
+      }
+    });
+
+  }
+
+  function show(i) {
+
+    if (i >= slides.length) index = 0;
+    else if (i < 0) index = slides.length - 1;
+    else index = i;
+
+    slides.forEach(s => {
+      s.style.opacity = "0";
+    });
+
+    dots.forEach(d => {
+      d.classList.remove("bg-white");
+      d.classList.add("bg-gray-400");
+    });
+
+    slides[index].style.opacity = "1";
+
+    if (dots[index]) {
+      dots[index].classList.add("bg-white");
+      dots[index].classList.remove("bg-gray-400");
+    }
+
+  }
+
+  function reset() {
+    clearInterval(timer);
+    timer = setInterval(() => show(index + 1), 4000);
+  }
+
+  document.addEventListener('DOMContentLoaded', init);
+
+</script>
+
+{% endblock %}

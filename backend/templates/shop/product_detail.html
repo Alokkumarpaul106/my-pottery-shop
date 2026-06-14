@@ -1,0 +1,231 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<link href="https://fonts.googleapis.com/css2?family=Tiro+Bangla&display=swap" rel="stylesheet">
+
+<section class="font-['Tiro_Bangla'] py-10 bg-gray-50">
+  <div class="max-w-7xl mx-auto px-4">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 bg-white p-6 rounded-xl shadow-md">
+
+      <!-- Images -->
+      <div class="relative">
+        <!-- Main Image Zoom -->
+        <div id="zoomContainer" class="bg-gray-100 rounded-xl overflow-hidden border border-gray-300 shadow-md"
+          onmousemove="zoomImage(event)" onmouseleave="resetZoom()">
+          <img id="mainImage" src="{{ product.main_image.url }}"
+            class="w-full h-[450px] object-cover-fit cursor-zoom-in transition-transform duration-100"
+            style="transform-origin:0 0;" />
+        </div>
+
+        <!-- Thumbnails -->
+        <div class="grid grid-cols-4 gap-3 mt-4">
+          <div class="thumbnail-wrap overflow-hidden rounded-xl border-2 border-orange-500 cursor-pointer">
+            <img src="{{ product.main_image.url }}" class="w-full h-20 object-cover"
+              onclick="changeMain(this, '{{ product.main_image.url }}')" />
+          </div>
+          {% for image in images %}
+          <div class="thumbnail-wrap overflow-hidden rounded-xl border-2 border-transparent cursor-pointer">
+            <img src="{{ image.image.url }}"
+              class="w-full h-20 object-cover opacity-60 hover:opacity-100 transition-opacity"
+              onclick="changeMain(this, '{{ image.image.url }}')" />
+          </div>
+          {% endfor %}
+        </div>
+
+        <!-- Category Badge -->
+        <span class="absolute top-4 left-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm z-10">
+          {{ product.category }}
+        </span>
+      </div>
+
+      <!-- Details -->
+      <div>
+        <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2">{{ product.product_name }}</h1>
+        <p class="text-sm md:text-lg text-gray-800 mb-5 leading-relaxed">{{ product.description }}</p>
+
+        <!-- Price & Stock -->
+        <div class="flex items-center gap-3 mb-3 flex-wrap">
+          <span class="text-3xl font-bold text-blue-700">৳ {{ product.price }}</span>
+          {% if product.old_price %}
+          <span class="text-gray-400 line-through">৳ {{ product.old_price }}</span>
+          {% endif %}
+          {% if product.stock > 0 %}
+          <span class="bg-green-100 text-green-600 px-3 py-1 rounded-full text-sm">In Stock</span>
+          {% else %}
+          <span class="bg-red-100 text-red-500 px-3 py-1 rounded-full text-sm">Out of Stock</span>
+          {% endif %}
+        </div>
+
+        <!-- Rating -->
+        <!-- capacity -->
+        <p class="text-xl text-gray-600 mb-5">⚖️ওজন: {{ product.weight }} kg</p>
+        <!-- brand -->
+        <p class="text-lg text-gray-500 mb-5">Brand: <span class="text-blue-700">কারুপণ্য</span></p>
+
+        <form method="POST" action="{% url 'backend:cart_add' product.id %}">
+          {% csrf_token %}
+
+          {% if product.stock > 0 %}
+          <!-- Quantity -->
+          <div class="mb-5">
+            <label class="block text-lg font-semibold mb-2 text-gray-600">Quantity</label>
+            <div class="flex items-center gap-2">
+              <button type="button" onclick="changeQty(-1)"
+                class="w-9 h-9 rounded-lg border text-lg font-bold hover:bg-gray-100 transition">−</button>
+              <input type="number" name="quantity" id="quantity" value="1" min="1" max="{{ product.stock|default:1 }}"
+                class="w-16 text-center py-2 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none text-lg" />
+              <button type="button" onclick="changeQty(1)"
+                class="w-9 h-9 rounded-lg border text-lg font-bold hover:bg-gray-100 transition">+</button>
+              <span class="text-xs text-gray-400">Max: {{ product.stock }}</span>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="flex gap-3 flex-wrap">
+            <button type="submit"
+              class="flex-1 py-3 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition shadow-md text-lg font-medium">
+              <i class="bx bx-cart mr-1"></i> Add to Cart
+            </button>
+
+            {% if not request.user.is_authenticated %}
+            <a id="orderNowBtn" href="{% url 'backend:checkout' %}?product_id={{ product.id }}&quantity=1"
+              class="flex-1 text-center py-3 rounded-lg border-2 border-blue-600 text-blue-600 hover:bg-blue-50 transition text-lg font-medium shadow-md">
+              <i class="bx bx-shopping-bag mr-1"></i> Order Now
+            </a>
+            {% else %}
+            <button type="submit" name="next" value="checkout"
+              class="flex-1 py-3 rounded-lg border-2 border-blue-600 text-blue-600 hover:bg-blue-50 transition text-lg font-medium">
+              <i class="bx bx-shopping-bag mr-1"></i> Order Now
+            </button>
+            {% endif %}
+          </div>
+
+          {% else %}
+          <button disabled class="w-full py-3 bg-gray-100 text-gray-400 rounded-lg cursor-not-allowed text-sm">
+            Out of Stock
+          </button>
+          {% endif %}
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Product Info -->
+<section class="font-['Tiro_Bangla'] max-w-7xl mx-auto px-4 mt-6">
+  <div class="p-6">
+    <h3 class="text-xl font-semibold text-gray-700 mb-5 pb-3 border-b">Product Details Of</h3>
+    <p class="text-gray-900 mb-4">{{ product.product_details|linebreaksbr }}</p>
+    <div class="grid grid-cols-3 gap-6 text-sm text-gray-600 border-t pt-4">
+      <div>
+        <span class="font-semibold text-gray-700">Category</span>
+        <p class="mt-1">{{ product.category }}</p>
+      </div>
+      <div>
+        <span class="font-semibold text-gray-700">Stock</span>
+        <p class="mt-1">{{ product.stock }} Available</p>
+      </div>
+      <div class="row-span-2">
+        <img src="{{ product.main_image.url }}" class="w-28 h-28 object-cover rounded-lg border shadow-md" />
+      </div>
+      <div>
+        <span class="font-semibold text-gray-700">Product ID</span>
+        <p class="mt-1">#{{ product.id }}</p>
+      </div>
+      <div>
+        <span class="font-semibold text-gray-700">Delivery</span>
+        <p class="mt-1">Fast Delivery</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Related Products -->
+<section class="font-['Tiro_Bangla'] max-w-7xl mx-auto px-4 mt-8 mb-10">
+  <div class="border-t pt-6">
+    <h2 class="text-2xl font-semibold mb-1">Related Products</h2>
+    <p class="text-sm text-gray-500 mb-5">You May Also Like</p>
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      {% for item in related_products %}
+      <a href="{% url 'backend:product_detail' item.slug %}"
+        class="bg-white border rounded-lg hover:shadow-lg shadow-md transition overflow-hidden group block">
+        <div class="overflow-hidden">
+          <img src="{{ item.main_image.url }}" class="w-full h-48 object-cover  duration-300" />
+        </div>
+        <div class="p-4">
+          <p class="text-xs text-gray-400 mb-1">{{ item.category }}</p>
+          <h3 class="font-semibold text-gray-800 truncate text-sm group-hover:text-blue-600 transition">
+            {{ item.product_name }}
+          </h3>
+          <div class="flex items-center gap-2 mt-2">
+            <span class="text-blue-600 font-bold text-sm">৳ {{ item.price }}</span>
+            {% if item.old_price %}
+            <span class="text-gray-400 text-xs line-through">৳ {{ item.old_price }}</span>
+            {% endif %}
+          </div>
+          {% if item.stock > 0 %}
+          <span class="text-green-500 text-xs mt-1 block">In Stock</span>
+          {% else %}
+          <span class="text-red-400 text-xs mt-1 block">Out of Stock</span>
+          {% endif %}
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<script>
+  // Quantity — একটাই function
+  function changeQty(val) {
+    const input = document.getElementById('quantity');
+    const max = parseInt(input.max);
+    const newVal = parseInt(input.value) + val;
+    if (newVal >= 1 && newVal <= max) input.value = newVal;
+  }
+
+  // Zoom
+  function zoomImage(e) {
+    const container = document.getElementById('zoomContainer');
+    const img = document.getElementById('mainImage');
+    const rect = container.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    img.style.transformOrigin = `${x}% ${y}%`;
+    img.style.transform = 'scale(2.5)';
+  }
+  function resetZoom() {
+    document.getElementById('mainImage').style.transform = 'scale(1)';
+  }
+
+  // Thumbnail
+  function changeMain(el, url) {
+    document.getElementById('mainImage').src = url;
+    document.querySelectorAll('.thumbnail-wrap').forEach(w => {
+      w.classList.replace('border-orange-500', 'border-transparent');
+      w.querySelector('img').classList.add('opacity-60');
+      w.querySelector('img').classList.remove('opacity-100');
+    });
+    el.closest('.thumbnail-wrap').classList.replace('border-transparent', 'border-orange-500');
+    el.classList.remove('opacity-60');
+    el.classList.add('opacity-100');
+  }
+
+
+  function changeQty(val) {
+    const input = document.getElementById('quantity');
+    const max = parseInt(input.max);
+    const newVal = parseInt(input.value) + val;
+    if (newVal >= 1 && newVal <= max) {
+      input.value = newVal;
+      // ✅ Guest Order Now URL update
+      const btn = document.getElementById('orderNowBtn');
+      if (btn) {
+        btn.href = "{% url 'backend:checkout' %}?product_id={{ product.id }}&quantity=" + newVal;
+      }
+    }
+  }
+</script>
+
+{% endblock %}

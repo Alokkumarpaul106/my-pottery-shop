@@ -1,0 +1,214 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+
+<div class="font-['Tiro_Bangla'] max-w-7xl mx-auto w-full h-full px-6 md:px-16 py-10">
+    
+        <h2 class="text-2xl md:text-3xl font-bold">
+            🚚Delivery Checkout
+        </h2>
+        <p class="text-sm text-green-700 font-semibold my-2"><span class="bg-red-700 text-white px-2 py-1 rounded-full">বিঃদ্রঃ:</span> ডেলিভারি চার্জ পণ্যের ওজনের উপর নির্ভর করিবে,অতিরিক্ত প্রতি কেজিতে ২০ টাকা হারে চার্জ যুক্ত হইবে। 🚚📦</p>
+    
+    <div class="mt-2">
+        <a href="{% url 'backend:home' %}" class="text-xl md:text-xl font-semibold text-blue-500 hover:text-blue-700">
+            ← Back to Home
+        </a>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-6">
+
+
+        <!-- ================= LEFT SIDE ================ -->
+        <div class="lg:col-span-2">
+            <div class="bg-white shadow-lg rounded-2xl p-8 border">
+
+                <div class="flex justify-between">
+                    <h1 class="text-2xl font-bold">🗺️ডেলিভারি ঠিকানা</h1>
+                    <h3
+                        class="text-sm font-semibold bg-green-200 rounded-full text-blue-600 py-2 m-2 p-2 border shadow">
+                        ডেলিভারি চার্জ
+                        <span id="topShippingText">
+                            {% if shipping == 0 %}
+                            <span class="text-white bg-green-500 rounded-full px-4 py-1">ফ্রি</span>
+                            {% else %}
+                            <span class="font-bold">৳ {{ shipping }}</span>
+                            {% endif %}
+                        </span>
+                    </h3>
+                </div>
+
+
+
+                <form method="POST" class="space-y-5">
+                    {% csrf_token %}
+                    <!-- Full Name -->
+                    <input type="text" name="full_name" placeholder="👤 সম্পূর্ণ নাম"
+                        class="border p-3 rounded-lg w-full focus:ring-2 focus:ring-blue-400" required>
+
+                    <!-- Phone -->
+                    <input type="text" name="phone" placeholder="📞 ফোন নম্বর"
+                        class="border p-3 rounded-lg w-full focus:ring-2 focus:ring-blue-400" required>
+
+                    <!-- Address -->
+                    <textarea name="address" placeholder="🏠 সম্পূর্ণ ঠিকানা"
+                        class="border p-3 rounded-lg w-full focus:ring-2 focus:ring-blue-400" rows="3"
+                        required></textarea>
+
+                    <!-- location khub e importent part id for js change UI -->
+                    <select id="locationSelect" name="location"
+                        class="border p-3 rounded-lg w-full focus:ring-2 focus:ring-blue-400" required>
+                        <option value="">লোকেশন নির্বাচন করুন</option>
+                        <option value="dhaka">📍 Dhaka</option>
+                        <option value="sub_dhaka">🏙️SubDhaka(ঢাকার আশেপাশের এলাকা)</option>
+                        <option value="outside_dhaka">🚚 Outside of Dhaka(ঢাকার বাহিরে)</option>
+                    </select>
+
+
+                    <!-- Delivery Type -->
+                    <div class="mt-2">
+                        <h3 class="text-2xl font-bold mb-8 pt-8">💳পেমেন্টের ধরন</h3>
+
+                        <div class="grid grid-cols-2 gap-6 ">
+
+                            <label class="border-blue-500 shadow-lg border-2 font-semibold p-8 text-center text-sm md:text-lg rounded-lg cursor-pointer bg-blue-100">
+                                <input type="radio" name="delivery_level" value="cod"  checked required>
+                                📦💰Cash On Delivery
+                                <p class="text-sm text-gray-500 mt-2">ডেলিভারির সময় নগদে প্রদান করুন।</p>
+                            </label>
+
+                            <!-- <label class="border p-8 text-center text-sm md:text-lg  rounded-lg cursor-pointer hover:bg-gray-100">
+                                <input type="radio" name="delivery_level" value="cod" class="" disabled required>
+                                🌐💳Online Payment
+                                <p class="text-sm text-gray-500 mt-2">দ্রুত কার্ডে পেমেন্ট করুন।</p>
+                            </label> -->
+
+                            
+                        </div>
+                    </div>
+
+                    <!-- Submit -->
+                    <div class="border py-3 rounded-xl text-center bg-green-200 ">
+                        <h1><i class="bx bx-lock"> আপনার তথ্য SSL এনক্রিপশন দ্বারা নিরাপদ।</i></h1>
+                    </div>
+                    <button type="submit"
+                        class="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-xl transition font-semibold shadow-lg">
+                        Proceed to Order Confirmation
+                    </button>
+                   
+
+                </form>
+
+            </div>
+        </div>
+
+        <!-- ================= RIGHT SIDE ================ -->
+        <div>
+
+            <div class="bg-white shadow-lg rounded-2xl p-6 sticky top-20 border">
+
+                <h3 class="text-xl font-bold mb-6 border-b pb-3">
+                    🧺 Order Summary
+                </h3>
+
+                <div class="space-y-3 font-semibold text-gray-500">
+
+                    <div class="flex justify-between">
+                        <span>Total Items</span>
+                        <span class="text-black">{{ total_items }}</span>
+                    </div>
+                    {% for item in cart_items %}
+                    <div class="flex flex-col text-gray-600 font-medium gap-1 mb-2">
+                        <div class="flex justify-between">
+                            <img src="{{ item.product.main_image.url }}"
+                                class="w-10 h-10 object-cover shadow rounded-lg">
+                            <span>Subtotal ({{ item.product.price }} x {{ item.quantity }})</span>
+                            <span class="text-black">৳ {{ item.total_price|floatformat:2 }}</span>
+                        </div>
+                        {% endfor %}
+                        <hr class="border">
+                        <div class="flex justify-between">
+                            <span>Total Price</span>
+                            <span class="text-black">৳ {{ total|floatformat:2 }}</span>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between">
+                        <span>🚚ডেলিভারি চার্জ</span>
+                        <span id="shippingText" class="text-black">
+                            {% if shipping == 0 %}
+                            <span class="text-white bg-green-500 rounded-full px-4 py-1">ফ্রি</span>
+                            {% else %}
+                            ৳ {{ shipping }}
+                            {% endif %}
+                        </span>
+
+                    </div>
+
+                    <div class="flex justify-between">
+                        <span>💰ট্যাক্স</span>
+                        <span class="text-black">৳ 0.00</span>
+                    </div>
+
+                    <hr class="border shadow">
+
+                    <div class="flex justify-between text-xl font-bold">
+                        <span class="text-blue-600">সর্বমোট</span>
+                        <span id="grandTotalText" class="text-blue-700">৳ {{ grand_total|floatformat:2 }}</span>
+                    </div>
+
+                </div>
+                {% if total < 6500 %} <p class="text-sm text-green-600 mt-4">
+                    !! আরও {{ -6500|add:total }} টাকার পণ্য 🛒 কিনুন এবং বিনামূল্যে ডেলিভারি পান।.🚚
+                    </p>
+                    {% else %}
+                    <p class="text-sm text-green-600 mt-4">
+                        🎉 You got free shipping!
+                    </p>
+                    {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<!-- ================= JS ================= -->
+<script>
+    const baseTotal = Number("{{ total }}");
+    const totalWeight = Number("{{ total_weight }}");  // ← weight নিন
+
+    const locationSelect = document.getElementById("locationSelect");
+    const shippingText = document.getElementById("shippingText");
+    const grandTotalText = document.getElementById("grandTotalText");
+    const topShippingText = document.getElementById("topShippingText");
+
+    function calcShipping(location, weight) {
+        const base  = {dhaka: 70, sub_dhaka: 100, outside_dhaka: 130};
+        const extra = {dhaka: 20, sub_dhaka: 20,  outside_dhaka: 20};
+        const loc = base[location] ? location : 'dhaka';
+        let shipping = base[loc];
+        if (weight > 1) shipping += Math.ceil(weight - 1) * extra[loc];
+        if (baseTotal >= 6500) shipping = 0;
+        return shipping;
+    }
+
+    locationSelect.addEventListener("change", function () {
+        let shipping = calcShipping(this.value, totalWeight);
+
+        if (shipping === 0) {
+            shippingText.innerHTML = '<span class="text-white bg-green-500 px-3 py-1 rounded">ফ্রি</span>';
+            topShippingText.innerHTML = '<span class="text-white bg-green-500 px-3 py-1 rounded">ফ্রি</span>';
+        } else {
+            shippingText.innerText = "৳ " + shipping;
+            topShippingText.innerText = "৳ " + shipping;
+        }
+
+        grandTotalText.innerText = "৳ " + (baseTotal + shipping).toFixed(2);
+    });
+</script>
+
+{% endblock %}

@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load socialaccount %}
+{% block content %}
+
+<div
+    class="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#edf4ff] via-[#dbeafe] to-[#bfdbfe] px-4 py-12 font-['Tiro_Bangla']">
+
+    <div class="relative w-full max-w-2xl">
+
+        <!-- Card -->
+        <div class="bg-white/80 backdrop-blur-xl border border-white/40 shadow-2xl rounded-xl p-8">
+
+            <!-- Heading -->
+            <div class="text-center mb-6">
+                <h2 class="text-3xl font-bold text-gray-800 p-2">রেজিস্ট্রেশন করুন</h2>
+                <p class="text-sm text-gray-500">নতুন অ্যাকাউন্ট তৈরি করুন</p>
+            </div>
+
+            <!-- Form -->
+            <form method="POST" class="space-y-4">
+                {% csrf_token %}
+
+
+                <!-- Row 1 -->
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="text-semibold text-gray-800">Username</label>
+                        <input type="text" name="username"
+                            class="w-full h-12 mt-1 px-4 rounded-xl border bg-gray-50 focus:ring-2 focus:ring-blue-300 outline-none"
+                            placeholder="Username" required>
+                        <p class="text-xs text-red-400 mt-1">
+                            ন্যূনতম ৫টি অক্ষর(অক্ষর ও সংখ্যা বাধ্যতামূলক)
+                        </p>
+                    </div>
+
+                    <div>
+                        <label class="text-semibold text-gray-800">Phone</label>
+                        <input type="text" name="phone"
+                            class="w-full h-12 mt-1 px-4 rounded-xl border bg-gray-50 focus:ring-2 focus:ring-blue-300 outline-none"
+                            placeholder="Phone" required>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="text-semibold text-gray-800">Email</label>
+                        <input type="email" name="email"
+                            class="w-full h-12 mt-1 px-4 rounded-xl border bg-gray-50 focus:ring-2 focus:ring-blue-300 outline-none"
+                            placeholder="Email" required>
+                    </div>
+
+                    <!-- Row 3 -->
+                    <div>
+                        <label class="text-semibold text-gray-800">Address</label>
+                        <input type="text" name="address"
+                            class="w-full h-12 mt-1 px-4 rounded-xl border bg-gray-50 focus:ring-2 focus:ring-blue-300 outline-none"
+                            placeholder="Address" required>
+                    </div>
+
+
+                    <!-- Row 4 -->
+
+                    <div>
+                        <label class="text-semibold text-gray-800">Password</label>
+                        <input type="password" name="password1"
+                            class="w-full h-12 mt-1 px-4 rounded-xl border bg-gray-50 focus:ring-2 focus:ring-blue-300 outline-none"
+                            placeholder="Password" required>
+                        <p class="text-xs text-red-400 mt-1">
+                            ন্যূনতম ৮টি অক্ষর(Upper & Lower case বাধ্যতামূলক)
+                        </p>
+                    </div>
+
+
+                    <div>
+                        <label class="text-semibold text-gray-800">Confirm</label>
+                        <input type="password" name="password2"
+                            class="w-full h-12 mt-1 px-4 rounded-xl border bg-gray-50 focus:ring-2 focus:ring-blue-300 outline-none"
+                            placeholder="Confirm" required>
+                    </div>
+
+                </div>
+                <!-- Submit -->
+                <button type="submit"
+                    class="w-full h-12 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold hover:scale-[1.02] transition">
+                    রেজিস্ট্রেশন করুন
+                </button>
+                <!-- googlecloud diye login or register -->
+                <!-- Divider -->
+                <p class="text-center my-2 text-gray-400 text-lg">or</p>
+
+                <div class="text-center">
+                    <a href="{% provider_login_url 'google' %}"
+                        class="w-full flex items-center justify-center gap-2 h-12  rounded-xl text-gray-700 hover:bg-blue-300 transition">
+
+                        <!-- Google Icon -->
+                        <svg class="w-5 h-5" viewBox="0 0 48 48">
+                            <path fill="#EA4335"
+                                d="M24 9.5c3.54 0 6.7 1.22 9.21 3.6l6.85-6.85C36.68 2.46 30.7 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.2C12.44 13.13 17.78 9.5 24 9.5z" />
+                            <path fill="#4285F4"
+                                d="M46.1 24.5c0-1.64-.15-3.21-.43-4.73H24v9h12.6c-.54 2.9-2.16 5.36-4.62 7.01l7.18 5.6C43.98 37.45 46.1 31.5 46.1 24.5z" />
+                            <path fill="#FBBC05"
+                                d="M10.54 28.43c-1.05-3.1-1.05-6.46 0-9.56l-7.98-6.2C.92 16.1 0 19.93 0 24s.92 7.9 2.56 11.33l7.98-6.2z" />
+                            <path fill="#34A853"
+                                d="M24 48c6.48 0 11.93-2.13 15.91-5.81l-7.18-5.6c-2.01 1.36-4.6 2.18-8.73 2.18-6.22 0-11.56-3.63-13.46-8.88l-7.98 6.2C6.51 42.62 14.62 48 24 48z" />
+                        </svg>
+
+                        Continue with Google
+                    </a>
+                </div>
+                <!-- Login -->
+                <p class="text-center text-sm text-gray-500">
+                    আগে থেকেই অ্যাকাউন্ট আছে?
+                    <a href="{% url 'backend:login' %}" class="text-blue-600 font-semibold hover:underline">
+                        লগইন করুন
+                    </a>
+                </p>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

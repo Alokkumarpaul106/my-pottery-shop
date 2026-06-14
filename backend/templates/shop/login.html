@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#f0f7ff] to-[#cfe5ff] px-4 py-12 font-['Tiro_Bangla']">
+
+    <div class="w-full max-w-md bg-white shadow-2xl rounded-xl p-6 border border-[#eadfce]">
+
+
+        <!-- Heading -->
+        <div class="text-center mb-7">
+            <h2 class="text-3xl font-bold text-[#5c3b1e] mb-2">
+                স্বাগতম
+            </h2>
+
+            <p class="text-gray-500 text-sm">
+                আপনার অ্যাকাউন্ট লগইন করুন ✨
+            </p>
+        </div>
+
+        
+
+        <!-- Form -->
+        <form method="POST" class="space-y-2 md:space-y-4">
+            {% csrf_token %}
+
+            <!-- Username -->
+            <div>
+                <label class="block text-bold mb-2">
+                    Username
+                </label>
+
+                <input type="text"
+                       name="username"
+                       placeholder="আপনার name লিখুন"
+                       class="w-full h-12 px-4 rounded-xl border border-[#e5d6c5] bg-[#fffaf5] focus:outline-none focus:ring-2 focus:ring-[#c58f5c]/40" required>
+            </div>
+
+            <!-- Password -->
+            <div>
+                <label class="block text-bold  mb-2">
+                    Password
+                </label>
+
+                <input type="password"
+                       name="password"
+                       placeholder="আপনার password লিখুন"
+                       class="w-full h-12 px-4 rounded-xl border border-[#e5d6c5] bg-[#fffaf5] focus:outline-none focus:ring-2 focus:ring-[#c58f5c]/40" required>
+            </div>
+
+            <!-- Button -->
+            <button type="submit"
+                    class="w-full h-12 rounded-xl bg-blue-600 shadow-md text-white font-medium hover:bg-blue-700 transition">
+                লগইন করুন
+            </button>
+            
+
+            <!-- Register -->
+            <p class="text-center text-sm text-gray-600 pt-2">
+                নতুন ব্যবহারকারী?
+
+                <a href="{% url 'backend:register' %}" class="text-[#8b5e34] font-semibold hover:underline">
+                    এখনই রেজিস্ট্রেশন করুন
+                </a>
+            </p>
+
+        </form>
+
+    </div>
+</div>
+
+{% endblock %}

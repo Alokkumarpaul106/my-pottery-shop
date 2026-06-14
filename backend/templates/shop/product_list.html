@@ -1,0 +1,221 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<link href="https://fonts.googleapis.com/css2?family=Tiro+Bangla&display=swap" rel="stylesheet">
+
+<section class="font-['Tiro_Bangla'] py-6 bg-gray-50 mt-10">
+    <div class="max-w-7xl mx-auto px-4 md:px-8">
+
+        <!-- Header -->
+        <div class="mb-4">
+            <h2 class="text-3xl font-bold text-gray-900 mb-1">All Products</h2>
+            <p class="text-gray-600 mt-1">আমাদের উন্নত মানের পণ্যের বিস্তৃত সম্ভার দেখুন।</p>
+            <p class="text-gray-400 text-sm mt-1">Showing {{ products|length }} products</p>
+        </div>
+
+        <div class="flex flex-col lg:flex-row gap-8 mt-4">
+            <!-- for mobile -->
+        <button onclick="toggleFilter()"
+                class="lg:hidden w-36 flex items-center justify-between bg-white border px-4 py-3 rounded-xl shadow text-sm font-medium text-gray-700 mb-2">
+            <span><i class='bx bx-filter'></i> Filter</span>
+            <i id="filter-icon" class="bx bx-chevron-down"></i>
+       </button>
+
+            <!-- Filter Sidebar -->
+            <aside class="w-full lg:w-1/4">
+                <form method="GET"id="filter-form" class="bg-white p-5 rounded-xl shadow border sticky top-20">
+                    <h3 class="text-lg font-semibold mb-5">Filter Products</h3>
+
+                    <!-- Search -->
+                    <div class="mb-5">
+                        <label class="text-sm font-medium text-gray-600">Search</label>
+                        <input type="text" name="search" value="{{ request.GET.search }}"
+                            placeholder="Search product..."
+                            class="w-full border p-2 rounded-lg mt-1 text-sm focus:outline-none focus:border-orange-400" />
+                    </div>
+
+                    <!-- Category -->
+                    <div class="mb-5">
+                        <label class="text-sm font-medium text-gray-600">Category</label>
+                        <select name="category"
+                            class="w-full border border-gray-300 p-2 rounded-lg mt-1 text-sm focus:outline-none focus:border-orange-400">
+                            <option value="">All Category</option>
+                            {% for category in categories %}
+                            <option value="{{ category.slug }}"
+                                {% if request.GET.category == category.slug %}selected{% endif %}>
+                                {{ category.category_name }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Price -->
+                    <div class="mb-5">
+                        <label class="text-sm font-medium text-gray-600">Price Range</label>
+                        <div class="flex gap-2 mt-1">
+                            <input type="number" name="min_price" placeholder="Min"
+                                value="{{ request.GET.min_price }}"
+                                class="w-full border p-2 rounded-lg text-sm focus:outline-none focus:border-orange-400" />
+                            <input type="number" name="max_price" placeholder="Max"
+                                value="{{ request.GET.max_price }}"
+                                class="w-full border p-2 rounded-lg text-sm focus:outline-none focus:border-orange-400" />
+                        </div>
+                    </div>
+
+                    <!-- Sort -->
+                    <div class="mb-6">
+                        <label class="text-sm font-medium text-gray-600">Sort By</label>
+                        <select name="sort" class="w-full border p-2 rounded-lg mt-1 text-sm focus:outline-none focus:border-orange-400">
+                            <option value="">Default</option>
+                            <option value="latest" {% if request.GET.sort == 'latest' %}selected{% endif %}>Latest</option>
+                            <option value="low" {% if request.GET.sort == 'low' %}selected{% endif %}>Low Price</option>
+                            <option value="high" {% if request.GET.sort == 'high' %}selected{% endif %}>High Price</option>
+                        </select>
+                    </div>
+
+                    <button type="submit"
+                        class="w-full bg-orange-500 text-white py-2 rounded-lg hover:bg-orange-600 transition text-sm font-medium">
+                        Apply Filter
+                    </button>
+                    <a href="{% url 'backend:product_list' %}"
+                        class="block text-center mt-3 text-sm text-gray-400 hover:text-gray-600 transition">
+                        Clear Filter
+                    </a>
+                </form>
+            </aside>
+<!-- for using filter in phone -->
+<script>
+    function toggleFilter() {
+    document.getElementById('filter-form').classList.toggle('hidden');
+    document.getElementById('filter-icon').classList.toggle('rotate-180');
+}
+</script>
+
+            <!-- Product Grid -->
+            <div class="w-full lg:w-3/4">
+                <div class="grid grid-cols-2 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+                    {% for product in products %}
+                    <div class="bg-white border rounded-xl shadow hover:shadow-lg hover:border-gray-300 transition-all duration-300 group relative flex flex-col h-full overflow-hidden">
+
+                        <!-- Badges -->
+                        {% if product.stock > 0 and product.stock < 5 %}
+                        <span class="absolute top-3 left-3 z-10 bg-red-100 text-red-600 text-[10px] font-bold px-2 py-1 rounded-md uppercase">
+                            Limited
+                        </span>
+                        {% endif %}
+
+                        {% if product.stock > 0 %}
+                        <span class="absolute top-3 right-3 z-10 bg-green-600 text-white text-xs px-2 py-1 rounded-full shadow-md">
+                            In Stock
+                        </span>
+                        {% else %}
+                        <span class="absolute top-3 right-3 z-10 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
+                            Out of Stock
+                        </span>
+                        {% endif %}
+
+                        <!-- Image -->
+                        <div class="overflow-hidden">
+                            {% if product.stock > 0 %}
+                            <a href="{% url 'backend:product_detail' product.slug %}">
+                                <img src="{{ product.main_image.url }}"
+                                    onerror="this.src='https://placehold.co/400x300?text=No+Image'"
+                                    class="w-full h-48 object-cover-fit group-hover:scale-105 transition-transform duration-300" />
+                            </a>
+                            {% else %}
+                            <img src="{{ product.main_image.url }}"
+                                onerror="this.src='https://placehold.co/400x300?text=No+Image'"
+                                class="w-full h-48 object-cover opacity-50" />
+                            {% endif %}
+                        </div>
+
+                        <!-- Content -->
+                        <div class="p-4 flex flex-col flex-grow">
+                            <p class="text-xs text-orange-500 mb-1">{{ product.category }}</p>
+                            <h3 class="font-semibold text-gray-800 text-sm group-hover:text-green-600 transition">
+                                <a href="{% url 'backend:product_detail' product.slug %}">
+                                    {{ product.product_name|truncatewords:4 }}
+                                </a>
+                            </h3>
+
+                            <div class="mt-2 flex gap-2 items-center">
+                                <span class="text-lg font-bold text-gray-900">৳ {{ product.price }}</span>
+                                {% if product.old_price %}
+                                <span class="text-sm text-gray-400 line-through">৳ {{ product.old_price }}</span>
+                                {% endif %}
+                            </div>
+
+                            <!-- Buttons -->
+                            <div class="mt-auto pt-4 flex gap-2 text-sm">
+                                {% if product.stock > 0 %}
+                                <a href="{% url 'backend:product_detail' product.slug %}"
+                                    class="flex-1 text-center text-white bg-blue-500 py-2 rounded-lg hover:bg-blue-600 transition shadow-md">
+                                    View
+                                </a>
+                                <a href="{% url 'backend:cart_add' product.id %}"
+                                    class="flex-1 text-center bg-orange-500 text-white py-2 rounded-lg hover:bg-orange-600 transition shadow-md">
+                                    <i class="bx bx-cart"></i> Cart
+                                </a>
+                                {% else %}
+                                <button disabled
+                                    class="flex-1 bg-gray-100 py-2 text-gray-400 rounded-lg cursor-not-allowed text-sm">
+                                    Out of Stock
+                                </button>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="col-span-full text-center py-20">
+                        <i class='bx bx-search-alt text-5xl text-gray-300'></i>
+                        <h3 class="text-xl font-semibold text-gray-600 mt-3">No Products Found</h3>
+                        <p class="text-gray-400 text-sm mt-1">Try another filter</p>
+                        <a href="{% url 'backend:product_list' %}"
+                            class="inline-block mt-4 bg-orange-500 text-white px-6 py-2 rounded-lg text-sm hover:bg-orange-600 transition">
+                            Clear Filter
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Pagination -->
+                {% if products.paginator.num_pages > 1 %}
+                <nav class="mt-10 flex justify-center mb-6">
+                    <ul class="flex items-center gap-2 text-sm">
+                        {% if products.has_previous %}
+                        <li>
+                            <a href="?page={{ products.previous_page_number }}&category={{ request.GET.category }}&q={{ request.GET.q }}&sort={{ request.GET.sort }}&min_price={{ request.GET.min_price }}&max_price={{ request.GET.max_price }}"
+                                class="px-3 py-2 border rounded-lg hover:bg-gray-100 transition">←</a>
+                        </li>
+                        {% endif %}
+
+                        {% for num in products.paginator.page_range %}
+                            {% if products.number == num %}
+                            <li>
+                                <span class="px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold">{{ num }}</span>
+                            </li>
+                            {% elif num > products.number|add:'-3' and num < products.number|add:'3' %}
+                            <li>
+                                <a href="?page={{ num }}&category={{ request.GET.category }}&q={{ request.GET.q }}&sort={{ request.GET.sort }}&min_price={{ request.GET.min_price }}&max_price={{ request.GET.max_price }}"
+                                    class="px-4 py-2 border rounded-lg hover:bg-gray-100 transition">{{ num }}</a>
+                            </li>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if products.has_next %}
+                        <li>
+                            <a href="?page={{ products.next_page_number }}&category={{ request.GET.category }}&q={{ request.GET.q }}&sort={{ request.GET.sort }}&min_price={{ request.GET.min_price }}&max_price={{ request.GET.max_price }}"
+                                class="px-3 py-2 border rounded-lg hover:bg-gray-100 transition">→</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

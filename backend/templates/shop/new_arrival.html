@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<link href="https://fonts.googleapis.com/css2?family=Tiro+Bangla&display=swap" rel="stylesheet">
+<!-- Product Section -->
+<section class="font-['Tiro_Bangla'] py-10 bg-gray-50">
+  <div class="max-w-7xl mx-auto px-5 md:px-8 ">
+
+    <h2 class="text-3xl font-bold mb-4 text-center text-gray-800">Latest Products</h2>
+    <p class="text-gray-500 text-center text-sm md:text-lg mb-6">আমাদের সর্বশেষ এবং সেরা পণ্যগুলো দেখুন</p>
+
+    <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+
+      {% for product in products %}
+      <!-- Product Card -->
+
+      <div class="bg-white rounded-xl  shadow hover:shadow-lg ">
+
+        <!-- Product Image -->
+
+        <div class="w-full h-32 md:h-64 lg:h-64 overflow-hidden relative rounded-t-xl">
+          {% if product.stock > 0 %}
+          <a href="{% url 'backend:product_detail' product.slug %}">
+            <img src="{{ product.main_image.url }}" class="w-full h-full object-cover-fit transition duration-300 ">
+          </a>
+          {% else %}
+          <img src="{{ product.main_image.url }}" class="w-full h-full object-cover-fit transition duration-300 ">
+          {% endif %}
+
+          <!-- Stock Badge -->
+          <span
+            class="absolute top-2 left-2 px-2 py-1 bg-red-600 text-xs font-medium shadow text-white rounded-full">New</span>
+          <span class="absolute top-2 right-2 text-xs px-2 py-1">
+            {% if product.stock > 0 %}
+
+            <span class="text-white bg-green-700 text-xs font-medium shadow px-2 py-1 rounded-full"> In Stock </span>
+
+            {% else %}
+
+            <span class="text-white bg-red-700 text-sm font-medium px-2 py-1 rounded-full"> Out of Stock </span>
+
+            {% endif %}
+          </span>
+        </div>
+
+        <!-- Product Content -->
+        <div class="p-2">
+
+          <h3 class="text-lg font-semibold text-gray-900 line-clamp-1">
+            {{ product.product_name }}
+          </h3>
+
+          <p class="text-gray-600 text-sm mt-1">
+            {{ product.category.category_name }}
+          </p>
+          <div class="flex items-center gap-2 flex-wrap">
+            <p class="text-gray-800 font-bold text-2xl mt-1">৳ {{ product.price }}</p>
+            <p class="text-gray-500 font-semibold mt-1">
+              {% if product.old_price %}
+              <span class="text-gray-500 line-through ">৳ {{ product.old_price }}</span>
+              {% endif %}
+            </p>
+          </div>
+          <!-- Buttons -->
+          {% if product.stock > 0 %}
+          <div class="flex flex-col gap-2 mt-3">
+
+            <a href="{% url 'backend:product_detail' product.slug %}"
+              class="flex-1 text-center text-sm py-1 rounded-md bg-blue-600 text-white hover:bg-blue-700 transition">
+              View Details
+            </a>
+
+            <form method="POST" action="{% url 'backend:cart_add' product.id %}" class="flex-1">
+              {% csrf_token %}
+              <button class="w-full text-sm py-1 rounded-md bg-blue-600 text-white hover:bg-blue-700 transition">
+                <i class="bx bx-cart"></i> Add to Cart
+              </button>
+            </form>
+
+          </div>
+          {% else %}
+          <button class="w-full text-sm py-4 mt-4 rounded-md bg-gray-200 text-red-500 shadow">
+            <i class="bx bx-cart"></i> Out Of Stock
+          </button>
+          {% endif %}
+
+        </div>
+
+      </div>
+      {% endfor %}
+
+    </div>
+    <div class="text-center mt-8">
+      <a href="{% url 'backend:product_list' %}"
+        class="inline-block bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition">
+        View All Products
+      </a>
+    </div>
+  </div>
+</section>
+
+
+
+
+{% endblock%}

@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<link href="https://fonts.googleapis.com/css2?family=Tiro+Bangla&display=swap" rel="stylesheet">
+
+
+<div class="font-['Tiro_Bangla'] max-w-7xl mx-auto">
+    <!-- Category Banner -->
+
+    <div class="relative h-[70vh] md:h-[90vh] overflow-hidden mb-10 mt-3.5 md:mt-0">
+
+        <div class="absolute inset-0 bg-black/40 z-10"></div>
+
+        <img src="{{ category.image.url }}" class="absolute top-0 left-0 w-full h-full object-cover-fit z-0" />
+
+        <div class="relative z-20 flex flex-col items-center justify-center h-full text-center px-4 lg:px-6">
+
+            <h2 class="text-2xl md:text-4xl font-bold text-white p-4 mb-2">
+                {{ category.category_name }}
+            </h2>
+
+            <h3 class="text-sm md:text-2xl text-gray-200 mb-6 leading-relaxed">
+                {{ category.description|truncatewords:100 }}
+            </h3>
+
+        </div>
+
+    </div>
+    <!-- Breadcrumb -->
+    <div class="px-8">
+        <div class="mb-4 text-sm text-gray-500">
+            <a href="{% url 'backend:home' %}" class="hover:text-orange-500 text-lg">
+                Home
+            </a>
+
+            <span class="mx-2">/</span>
+
+            <span class="text-gray-800 font-medium">
+                {{ category.category_name }}
+            </span>
+        </div>
+
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-md md:text-3xl font-bold text-gray-800">
+                {{ category.category_name }}
+            </h2>
+
+            <p class="text-gray-500">{{ products|length }} Products Found</p>
+        </div>
+
+        <!-- Product Grid -->
+        <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {% for product in products %}
+
+            <!-- Product Card -->
+            <div class="bg-white rounded-xl border shadow-md hover:shadow-2xl transition duration-300">
+                <!-- Image -->
+                <div class="w-full h-40 md:h-64 lg:h-52 overflow-hidden rounded-t-xl">
+                    <a href="{% url 'backend:product_detail' product.slug %}">
+                        <img src="{{ product.main_image.url }}" class="w-full h-full object-cover-fit" />
+                    </a>
+                </div>
+
+                <!-- Content -->
+                <div class="p-4">
+                    <!-- Category -->
+                    <p class="text-sm text-gray-500 mb-1">{{ product.category }}</p>
+
+                    <!-- Product Name -->
+                    <h3 class="font-semibold text-sm md:text-lg text-gray-800 truncate">
+                        {{ product.product_name }}
+                    </h3>
+
+                    <!-- Price -->
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <p class="text-blue-600 font-bold  text-lg md:text-2xl mt-1">
+                            ৳ {{ product.price }}
+                        </p>
+                        <p class="text-gray-500 font-semibold mt-1">
+                            {% if product.old_price %}
+                            <span class="text-gray-500 line-through">৳ {{ product.old_price }}</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                    <!-- Stock -->
+                    <div class="mt-1">
+                        {% if product.stock > 0 %}
+
+                        <span class="text-green-600 text-sm font-medium"> In Stock </span>
+
+                        {% else %}
+
+                        <span class="text-red-500 text-sm font-medium"> Out of Stock </span>
+
+                        {% endif %}
+                    </div>
+
+                    <!-- Button -->
+                    <div class="mt-2">
+                        <a href="{% url 'backend:product_detail' product.slug %}"
+                            class="block text-center bg-blue-600 text-white py-1 shadow-md rounded-lg hover:bg-blue-700 transition">
+                            View Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% if products  %}
+        <div class="text-center pt-8 mb-8 ">
+    <a href="{% url 'backend:product_list' %}"
+      class="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold shadow-md hover:bg-blue-700 transition">
+      View All Products
+    </a>
+  </div>
+  {% endif %}
+
+        <!-- No Product -->
+        {% if not products %}
+
+        <div class="text-center py-20">
+            <h3 class="text-2xl text-gray-500 mb-2">No Product Found</h3>
+
+            <p class="text-gray-400">This category has no products yet</p>
+        </div>
+
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
