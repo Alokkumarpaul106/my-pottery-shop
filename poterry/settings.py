@@ -183,4 +183,6 @@ EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 # railway deploy er jonno
 ALLOWED_HOSTS = ['*']
+# ata deploy er jonno, csrf error ashle ei line ta add korte hobe railway deploy er jonno
+CSRF_TRUSTED_ORIGINS = ['https://determined-patience-production-83bb.up.railway.app']
 
