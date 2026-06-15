@@ -1,2 +1,5 @@
 [deploy]
 startCommand = "gunicorn poterry.wsgi:application"
+
+[build]
+buildCommand = "python manage.py collectstatic --no-input"
