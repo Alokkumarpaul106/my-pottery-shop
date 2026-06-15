@@ -137,14 +137,14 @@ def order_process(request, order_id):
 
     order.order_status = "Confirmed"
     order.save()
-    
-    send_mail(
-        subject=f"নতুন অর্ডার #{order.id} - {order.full_name}",
-        message=f"""নতুন অর্ডার এসেছে!
-        অর্ডার আইডি: {order.id}
-        গ্রাহক: {order.full_name}
-        ঠিকানা: {order.address}
-        ফোন: {order.phone}
+    try:
+        send_mail(
+            subject=f"নতুন অর্ডার #{order.id} - {order.full_name}",
+            message=f"""নতুন অর্ডার এসেছে!
+অর্ডার আইডি: {order.id}
+গ্রাহক: {order.full_name}
+ঠিকানা: {order.address}
+ ফোন: {order.phone}
 
 আইটেমস:
 {items_details}
@@ -156,7 +156,10 @@ _____________
         from_email='alokkumarpaul22076@gmail.com',
         recipient_list=['alokkumarpaul22076@gmail.com'],
         fail_silently=True,
-    )
+        )
+    except Exception:
+        pass
+
     
     messages.success(request, "আপনার অর্ডারটি সফলভাবে সম্পন্ন হয়েছে!")
 
