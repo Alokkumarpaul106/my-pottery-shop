@@ -111,6 +111,7 @@ def checkout(request):
     return render(request, 'shop/checkout.html', context)
 
 # order process
+
 def order_process(request, order_id):
 
     if request.user.is_authenticated:
@@ -118,7 +119,6 @@ def order_process(request, order_id):
         # OrderItem আর create করব না — checkout এ হয়ে গেছে
         order_items = OrderItem.objects.filter(order=order)
         total = sum(item.price * item.quantity for item in order_items)
-
         # Cart clear করুন
         Cart.objects.filter(user=request.user).delete()
 
@@ -144,7 +144,7 @@ def order_process(request, order_id):
 অর্ডার আইডি: {order.id}
 গ্রাহক: {order.full_name}
 ঠিকানা: {order.address}
- ফোন: {order.phone}
+ফোন: {order.phone}
 
 আইটেমস:
 {items_details}

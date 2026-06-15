@@ -22,9 +22,9 @@
             <i id="filter-icon" class="bx bx-chevron-down"></i>
        </button>
 
-            <!-- Filter Sidebar -->
+            <!-- Filter Sidebar hidden lg:block mane mobile a form hidden but desktop a block -->
             <aside class="w-full lg:w-1/4">
-                <form method="GET"id="filter-form" class="bg-white p-5 rounded-xl shadow border sticky top-20">
+                <form method="GET"id="filter-form" class="bg-white hidden lg:block p-5 rounded-xl shadow border sticky top-20">
                     <h3 class="text-lg font-semibold mb-5">Filter Products</h3>
 
                     <!-- Search -->
@@ -86,9 +86,12 @@
             </aside>
 <!-- for using filter in phone -->
 <script>
-    function toggleFilter() {
-    document.getElementById('filter-form').classList.toggle('hidden');
-    document.getElementById('filter-icon').classList.toggle('rotate-180');
+function toggleFilter() {
+    const form = document.getElementById('filter-form');
+    const icon = document.getElementById('filter-icon');
+
+    form.classList.toggle('hidden');
+    icon.classList.toggle('rotate-180');
 }
 </script>
 
@@ -100,7 +103,7 @@
 
                         <!-- Badges -->
                         {% if product.stock > 0 and product.stock < 5 %}
-                        <span class="absolute top-3 left-3 z-10 bg-red-100 text-red-600 text-[10px] font-bold px-2 py-1 rounded-md uppercase">
+                        <span class="absolute top-3 left-3 z-10 bg-red-100 text-red-600 text-[10px] font-bold px-2 py-1 rounded-md uppercase shadow-md">
                             Limited
                         </span>
                         {% endif %}
@@ -131,15 +134,15 @@
                         </div>
 
                         <!-- Content -->
-                        <div class="p-4 flex flex-col flex-grow">
+                        <div class="p-2 md:p-4 flex flex-col flex-grow">
                             <p class="text-xs text-orange-500 mb-1">{{ product.category }}</p>
                             <h3 class="font-semibold text-gray-800 text-sm group-hover:text-green-600 transition">
                                 <a href="{% url 'backend:product_detail' product.slug %}">
-                                    {{ product.product_name|truncatewords:4 }}
+                                    {{ product.product_name|truncatewords:2 }}
                                 </a>
                             </h3>
 
-                            <div class="mt-2 flex gap-2 items-center">
+                            <div class="mt-2 flex flex-wrap gap-2 items-center">
                                 <span class="text-lg font-bold text-gray-900">৳ {{ product.price }}</span>
                                 {% if product.old_price %}
                                 <span class="text-sm text-gray-400 line-through">৳ {{ product.old_price }}</span>
