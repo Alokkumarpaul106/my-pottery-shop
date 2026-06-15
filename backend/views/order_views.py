@@ -141,10 +141,10 @@ def order_process(request, order_id):
     send_mail(
         subject=f"নতুন অর্ডার #{order.id} - {order.full_name}",
         message=f"""নতুন অর্ডার এসেছে!
-অর্ডার আইডি: {order.id}
-গ্রাহক: {order.full_name}
-ঠিকানা: {order.address}
-ফোন: {order.phone}
+        অর্ডার আইডি: {order.id}
+        গ্রাহক: {order.full_name}
+        ঠিকানা: {order.address}
+        ফোন: {order.phone}
 
 আইটেমস:
 {items_details}
