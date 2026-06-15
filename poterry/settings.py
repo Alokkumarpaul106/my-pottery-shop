@@ -169,19 +169,14 @@ LOGIN_REDIRECT_URL='/'
 LOGOUT_REDIRECT_URL='/'
 
 # email varification
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_PORT = 587 localhost e test korar jonno
-# EMAIL_USE_TLS = True
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587 
+EMAIL_USE_TLS = True
 # railway deploy er jonno
 # EMAIL_PORT = 465 
 # EMAIL_USE_TLS = False
 # EMAIL_USE_SSL = True
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp-relay.brevo.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_USE_SSL = False
 # EMAIL_HOST_USER = 'alokkumarpaul22076@gmail.com'
 # EMAIL_HOST_PASSWORD = 'wxwx dbtf pohl ipew'
 
@@ -192,5 +187,5 @@ EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 # railway deploy er jonno
 ALLOWED_HOSTS = ['*']
 # ata deploy er jonno, csrf error ashle ei line ta add korte hobe railway deploy er jonno
-CSRF_TRUSTED_ORIGINS = ['https://determined-patience-production-83bb.up.railway.app']
+CSRF_TRUSTED_ORIGINS = ['https://my-pottery-shop-production.up.railway.app']
 

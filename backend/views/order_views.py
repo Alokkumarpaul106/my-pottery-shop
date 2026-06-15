@@ -137,8 +137,8 @@ def order_process(request, order_id):
 
     order.order_status = "Confirmed"
     order.save()
-    try:
-        send_mail(
+    
+    send_mail(
         subject=f"নতুন অর্ডার #{order.id} - {order.full_name}",
         message=f"""নতুন অর্ডার এসেছে!
         অর্ডার আইডি: {order.id}
@@ -153,12 +153,11 @@ def order_process(request, order_id):
 _____________
 সর্বমোট: {order.order_total}টাকা
     """,
-        from_email='aec6b4001@smtp-brevo.com',
+        from_email='alokkumarpaul22076@gmail.com',
         recipient_list=['alokkumarpaul22076@gmail.com'],
         fail_silently=True,
     )
-    except Exception:
-        pass
+    
     messages.success(request, "আপনার অর্ডারটি সফলভাবে সম্পন্ন হয়েছে!")
 
     return render(request, 'shop/order_process.html', {
