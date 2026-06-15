@@ -179,4 +179,6 @@ EMAIL_USE_TLS = True
 # secure korar jonno .env file e rakha better
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+# railway deploy er jonno
+ALLOWED_HOSTS = ['*']
 
