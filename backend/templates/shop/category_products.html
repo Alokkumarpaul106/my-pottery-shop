@@ -63,9 +63,9 @@
                 </div>
 
                 <!-- Content -->
-                <div class="p-4">
+                <div class="p-2 md:p-4">
                     <!-- Category -->
-                    <p class="text-sm text-gray-500 mb-1">{{ product.category }}</p>
+                    <p class="text-sm text-gray-500 mb-1 truncate">{{ product.category }}</p>
 
                     <!-- Product Name -->
                     <h3 class="font-semibold text-sm md:text-lg text-gray-800 truncate">
@@ -73,13 +73,13 @@
                     </h3>
 
                     <!-- Price -->
-                    <div class="flex items-center gap-2 flex-wrap">
-                        <p class="text-blue-600 font-bold  text-lg md:text-2xl mt-1">
+                    <div class="flex items-center md:gap-2 flex-wrap">
+                        <p class="text-blue-600 font-bold  text-xm md:text-2xl mt-1">
                             ৳ {{ product.price }}
                         </p>
                         <p class="text-gray-500 font-semibold mt-1">
                             {% if product.old_price %}
-                            <span class="text-gray-500 line-through">৳ {{ product.old_price }}</span>
+                            <span class="text-gray-500 line-through text-sm">৳ {{ product.old_price }}</span>
                             {% endif %}
                         </p>
                     </div>
@@ -97,9 +97,9 @@
                     </div>
 
                     <!-- Button -->
-                    <div class="mt-2">
+                    <div class="mt-1 md:mt-2">
                         <a href="{% url 'backend:product_detail' product.slug %}"
-                            class="block text-center bg-blue-600 text-white py-1 shadow-md rounded-lg hover:bg-blue-700 transition">
+                            class="block text-sm md:text-lg text-center bg-blue-600 text-white py-1 shadow-md rounded-lg hover:bg-blue-700 transition">
                             View Details
                         </a>
                     </div>
