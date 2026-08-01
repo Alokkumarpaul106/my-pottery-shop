@@ -21,7 +21,7 @@ from django.conf.urls.static import static
 from django.views.static import serve # এই লাইনটি যোগ করুন
 from django.urls import re_path # এই লাইনটি যোগ করুন
 urlpatterns = [
-    path('pronam_babaSongkor2026admin/', admin.site.urls),
+    path('proname/', admin.site.urls),
     path('',include('backend.urls')),
     path('accounts/', include('allauth.urls')),  # Google login er jonno
 ]
